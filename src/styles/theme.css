@@ -1,0 +1,65 @@
+/* 1. MICHELIN DARK */
+:root,
+[data-theme="michelin-dark"] {
+  --bg-primary: #070709;
+  --bg-secondary: #141417;
+  --bg-card: rgba(20, 20, 26, 0.75);
+  --text-main: #f4f4f6;
+  --text-muted: #a1a1aa;
+  --accent: #e5c158;
+  --accent-glow: rgba(229, 193, 88, 0.25);
+  --border-color: rgba(229, 193, 88, 0.2);
+  --font-heading: 'Playfair Display', serif;
+}
+
+/* 2. NORDIC ZEN */
+[data-theme="nordic-zen"] {
+  --bg-primary: #0c1411;
+  --bg-secondary: #14211d;
+  --bg-card: rgba(22, 36, 32, 0.75);
+  --text-main: #edf2f0;
+  --text-muted: #8ba69b;
+  --accent: #c2b280;
+  --accent-glow: rgba(194, 178, 128, 0.2);
+  --border-color: rgba(194, 178, 128, 0.2);
+  --font-heading: 'Cormorant Garamond', serif;
+}
+
+/* 3. TRATTORIA WARM */
+[data-theme="trattoria-warm"] {
+  --bg-primary: #120709;
+  --bg-secondary: #1f0d11;
+  --bg-card: rgba(36, 15, 20, 0.75);
+  --text-main: #fbf5f3;
+  --text-muted: #c7a7a1;
+  --accent: #d97757;
+  --accent-glow: rgba(217, 119, 87, 0.2);
+  --border-color: rgba(217, 119, 87, 0.2);
+  --font-heading: 'Cinzel', serif;
+}
+
+/* 4. CYBER FUSION */
+[data-theme="cyber-fusion"] {
+  --bg-primary: #04040a;
+  --bg-secondary: #0a0a18;
+  --bg-card: rgba(16, 16, 36, 0.75);
+  --text-main: #f5f5ff;
+  --text-muted: #8888b5;
+  --accent: #ff0055;
+  --accent-glow: rgba(255, 0, 85, 0.25);
+  --border-color: rgba(255, 0, 85, 0.25);
+  --font-heading: 'Syne', sans-serif;
+}
+
+/* 5. RUSTIC FIRE */
+[data-theme="rustic-fire"] {
+  --bg-primary: #0d0a07;
+  --bg-secondary: #17120d;
+  --bg-card: rgba(28, 21, 15, 0.75);
+  --text-main: #f7f3ed;
+  --text-muted: #aa9c8d;
+  --accent: #e08e0b;
+  --accent-glow: rgba(224, 142, 11, 0.2);
+  --border-color: rgba(224, 142, 11, 0.2);
+  --font-heading: 'Bodoni Moda', serif;
+}
