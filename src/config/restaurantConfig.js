@@ -6,6 +6,7 @@ export const restaurantConfig = {
     tagline: "Gastronomi Sanatının Zirvesi",
     subtitle: "Michelin rehberindeki imza lezzetler, tutkuyla işlenen yerel mahsuller ve unutulmaz bir atmosfer.",
     phone: "+90 (232) 444 0 700",
+    email: "info@example.com", // yayına almadan önce değiştirin: rezervasyon formu bu adrese düşer
     address: "Kültür Mah. Atatürk Cad. No:182, Alsancak / İzmir",
     hours: "Salı - Pazar: 17:30 - 23:30",
     reservationNotice: "Masalarımız için en az 2 gün önceden rezervasyon yapılması rica olunur.",

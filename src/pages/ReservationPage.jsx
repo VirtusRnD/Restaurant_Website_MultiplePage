@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { restaurantConfig } from "../config/restaurantConfig";
+import { submitForm } from "../lib/submitForm";
 
 export default function ReservationPage() {
   const [tableType, setTableType] = useState("standard");
+  const [status, setStatus] = useState("idle"); // idle | sending | sent | mailto | error
   const location = useLocation();
 
   useEffect(() => {
@@ -13,16 +15,22 @@ export default function ReservationPage() {
     }
   }, [location]);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    alert("Rezervasyon talebiniz alındı! Tarafınıza SMS ile onay iletilecektir.");
+    const values = Object.fromEntries(new FormData(e.currentTarget));
+    setStatus("sending");
+    try {
+      setStatus(await submitForm(values, { email: restaurantConfig.info.email, subject: `Rezervasyon talebi - ${restaurantConfig.info.name}` }));
+    } catch {
+      setStatus("error");
+    }
   };
 
   return (
     <div className="pt-32 pb-24 px-6 max-w-4xl mx-auto min-h-screen flex items-center justify-center">
-      
+
       <div className="w-full glass-panel p-8 md:p-16 rounded-3xl relative overflow-hidden">
-        
+
         <div className="text-center mb-12">
           <span className="text-xs uppercase tracking-[0.3em] text-[var(--accent)] font-bold block mb-2 px-4 py-1.5 rounded-full glass-panel inline-block">
             Unutulmaz Bir Deneyim
@@ -31,39 +39,48 @@ export default function ReservationPage() {
           <p className="text-xs text-[var(--text-muted)]">{restaurantConfig.info.reservationNotice}</p>
         </div>
 
+        {status === "sent" || status === "mailto" ? (
+          <p role="status" className="text-center text-sm font-semibold text-[var(--text-main)] relative z-10">
+            {status === "sent" ? "Rezervasyon talebiniz alındı! En kısa sürede sizi arayıp onaylayacağız." : "E-posta uygulamanız rezervasyon talebinizle açıldı. Göndere basmanız yeterli."}
+          </p>
+        ) : (
         <form onSubmit={handleSubmit} className="grid md:grid-cols-2 gap-6">
           <div>
             <label className="block text-[10px] uppercase tracking-wider text-[var(--text-muted)] mb-2 font-semibold">Adınız Soyadınız</label>
-            <input 
-              required 
-              type="text" 
-              placeholder="Adınız Soyadınız" 
-              className="w-full neo-input px-5 py-3.5 rounded-xl text-sm transition-all" 
+            <input
+              required
+              type="text"
+              name="name"
+              placeholder="Adınız Soyadınız"
+              className="w-full neo-input px-5 py-3.5 rounded-xl text-sm transition-all"
             />
           </div>
 
           <div>
             <label className="block text-[10px] uppercase tracking-wider text-[var(--text-muted)] mb-2 font-semibold">Telefon Numarası</label>
-            <input 
-              required 
-              type="tel" 
-              placeholder="+90 (5XX) XXX XX XX" 
-              className="w-full neo-input px-5 py-3.5 rounded-xl text-sm transition-all" 
+            <input
+              required
+              type="tel"
+              name="phone"
+              placeholder="+90 (5XX) XXX XX XX"
+              className="w-full neo-input px-5 py-3.5 rounded-xl text-sm transition-all"
             />
           </div>
 
           <div>
             <label className="block text-[10px] uppercase tracking-wider text-[var(--text-muted)] mb-2 font-semibold">Tarih</label>
-            <input 
-              required 
-              type="date" 
-              className="w-full neo-input px-5 py-3.5 rounded-xl text-sm transition-all" 
+            <input
+              required
+              type="date"
+              name="date"
+              className="w-full neo-input px-5 py-3.5 rounded-xl text-sm transition-all"
             />
           </div>
 
           <div>
             <label className="block text-[10px] uppercase tracking-wider text-[var(--text-muted)] mb-2 font-semibold">Masa Deneyimi Seçimi</label>
-            <select 
+            <select
+              name="tableType"
               value={tableType}
               onChange={(e) => setTableType(e.target.value)}
               className="w-full neo-input px-5 py-3.5 rounded-xl text-sm transition-all cursor-pointer"
@@ -75,14 +92,21 @@ export default function ReservationPage() {
           </div>
 
           <div className="md:col-span-2 mt-4">
-            <button 
-              type="submit" 
+            {status === "error" && (
+              <p role="alert" className="text-xs font-semibold text-red-400 text-center mb-3">
+                Rezervasyon talebiniz gönderilemedi. Lütfen tekrar deneyin ya da {restaurantConfig.info.email} adresine yazın.
+              </p>
+            )}
+            <button
+              type="submit"
+              disabled={status === "sending"}
               className="w-full py-4 rounded-xl neo-button text-xs uppercase tracking-widest cursor-pointer"
             >
               Rezervasyonu Onayla
             </button>
           </div>
         </form>
+        )}
 
       </div>
     </div>

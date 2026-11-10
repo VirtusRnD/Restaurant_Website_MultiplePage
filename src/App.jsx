@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { Routes, Route } from "react-router-dom";
-import { io } from "socket.io-client";
 import "./styles/theme.css";
 
 import Navbar from "./components/Navbar";
@@ -14,8 +13,8 @@ import TastingPage from "./pages/TastingPage";
 import ReservationPage from "./pages/ReservationPage";
 import ContactPage from "./pages/ContactPage";
 
-const BACKEND_URL = "https://theme-backend-vh34.onrender.com";
-const socket = io(BACKEND_URL);
+// Optional live theme switcher: set VITE_THEME_BACKEND_URL to turn it on (see .env.example).
+const BACKEND_URL = import.meta.env.VITE_THEME_BACKEND_URL;
 const CURRENT_SITE_ID = "restaurant-multipage";
 
 export default function App() {
@@ -25,7 +24,10 @@ export default function App() {
   });
 
   useEffect(() => {
-    fetch(`${BACKEND_URL}/api/themes/${CURRENT_SITE_ID}`)
+    if (!BACKEND_URL) return;
+    let socket;
+    let unmounted = false;
+    fetch(`${BACKEND_URL}/api/themes/${CURRENT_SITE_ID}`, { signal: AbortSignal.timeout(5000) })
       .then((res) => res.json())
       .then((data) => {
         if (data.activeTheme) {
@@ -40,10 +42,15 @@ export default function App() {
       }
     };
 
-    socket.on("theme_changed", handleThemeChange);
+    import("socket.io-client").then(({ io }) => {
+      if (unmounted) return;
+      socket = io(BACKEND_URL);
+      socket.on("theme_changed", handleThemeChange);
+    });
 
     return () => {
-      socket.off("theme_changed", handleThemeChange);
+      unmounted = true;
+      socket?.disconnect();
     };
   }, []);
 
